@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -7,15 +7,19 @@ import { Calendar as CalendarIcon, Clock, Check, Loader2 } from 'lucide-react';
 import 'react-day-picker/dist/style.css';
 
 const services = [
-  "Massothérapie Manuelle",
-  "Electrostimulation (EMS)",
-  "Thérapie par Andullation",
-  "Tecarthérapie",
-  "Lipo-Laser",
-  "Scanner IDIAG M360",
-  "Massage Sportif",
-  "Massage Prénatal"
-];
+    "Massothérapie Manuelle",
+    "Massage Sportif",
+    "Analyse du Dos",
+    "Analyse du Dos + Massothérapie",
+    "Analyse + Thérapie par Andullation",
+    "Analyse du Dos + Tecarthérapie",
+    "Thérapie par Andullation",
+    "Massothérapie + Tecarthérapie + Thérapie par Andullation",
+    "I-Motion, Thérapie avec Électrostimulation Musculaire",
+    "Analyse du Dos + Électrostimulation Musculaire",
+    "Séance Complète",
+    "Suivi Spécial"
+  ];
 
 const timeSlots = [
   "09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00", "17:00", "18:00"
