@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Custom Icons Components (Abstract/Artistic)
 const IconEMS = () => (
@@ -414,12 +415,12 @@ export default function Services() {
                 <p className="text-gray-600 text-lg leading-relaxed mb-8">
                   {selectedMassage.description}
                 </p>
-                <a
-                  href="/reservation"
+                <Link
+                  to="/reservation"
                   className="block w-full text-center bg-teal-600 text-white py-3 rounded-lg font-bold hover:bg-teal-700 transition-colors"
                 >
                   Réserver ce massage
-                </a>
+                </Link>
               </div>
             </motion.div>
           </div>
