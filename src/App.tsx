@@ -5,7 +5,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
+import Home from './components/Home';
 import Services from './components/Services';
 import Technologies from './components/Technologies';
 import About from './components/About';
@@ -19,14 +19,7 @@ import ScrollToTop from './components/ScrollToTop';
 
 // Page Components
 const HomePage = () => (
-  <>
-    <Hero />
-    <Services />
-    <Technologies />
-    <About />
-    <Testimonials />
-    <Contact />
-  </>
+  <Home />
 );
 
 const ServicesPage = () => (
@@ -90,6 +83,15 @@ const ContactPage = () => (
   </>
 );
 
+const AboutPage = () => (
+  <>
+    <div className="pt-20">
+      <About />
+    </div>
+    <Contact />
+  </>
+);
+
 export default function App() {
   return (
     <Router>
@@ -101,6 +103,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/technologies" element={<TechnologiesPage />} />
+            <Route path="/a-propos" element={<AboutPage />} />
             <Route path="/galerie" element={<GalleryPage />} />
             <Route path="/temoignages" element={<TestimonialsPage />} />
             <Route path="/reservation" element={<BookingPage />} />

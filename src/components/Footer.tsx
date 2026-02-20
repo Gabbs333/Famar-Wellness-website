@@ -1,5 +1,6 @@
 import { Heart, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
@@ -9,9 +10,11 @@ export default function Footer() {
           
           {/* Brand */}
           <div className="mb-6 md:mb-0">
-            <span className="text-2xl font-bold text-white tracking-tight">
-              FAMAR <span className="text-lime-500">Wellness</span>
-            </span>
+            <Link to="/" className="inline-block mb-4">
+              <div className="bg-white/10 p-2 rounded-lg backdrop-blur-sm inline-block text-white">
+                <Logo className="h-32 md:h-40 w-auto" />
+              </div>
+            </Link>
             <p className="text-sm mt-4 leading-relaxed">
               Cabinet de massothérapie ultra moderne alliant technologies de pointe et soins manuels pour votre santé et bien-être à Bastos, Yaoundé.
             </p>

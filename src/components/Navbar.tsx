@@ -3,6 +3,7 @@ import { Menu, X, Phone, MapPin, PhoneCall } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import CallbackModal from './CallbackModal';
+import Logo from './Logo';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +28,7 @@ export default function Navbar() {
     { name: 'Accueil', path: '/' },
     { name: 'Services', path: '/services' },
     { name: 'Technologies', path: '/technologies' },
+    { name: 'À Propos', path: '/a-propos' },
     { name: 'Galerie', path: '/galerie' },
     { name: 'Témoignages', path: '/temoignages' },
     { name: 'Actualités', path: '/actualites' },
@@ -41,34 +43,49 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-28 md:h-40">
             {/* Logo */}
-            <Link to="/" className="flex-shrink-0 flex items-center gap-2">
-              <div className="flex flex-col">
-                <span className="text-2xl font-bold text-teal-600 tracking-tight">
-                  FAMAR <span className="text-lime-500">Wellness</span>
-                </span>
-                <span className="text-xs text-gray-500 tracking-widest uppercase">
-                  Santé et Bien-Être
-                </span>
-              </div>
+            <Link 
+              to="/" 
+              className={`flex-shrink-0 flex items-center gap-2 ${
+                !scrolled && location.pathname === '/' ? 'text-white' : 'text-gray-900'
+              }`}
+            >
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Logo className="h-28 md:h-40 w-auto" />
+              </motion.div>
             </Link>
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center space-x-6">
-              {navLinks.map((link) => (
-                <Link
+              {navLinks.map((link, index) => (
+                <motion.div
                   key={link.name}
-                  to={link.path}
-                  className={`font-medium transition-colors duration-200 ${
-                    location.pathname === link.path ? 'text-teal-600' : 'text-gray-700 hover:text-teal-600'
-                  }`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    to={link.path}
+                    className={`font-medium transition-colors duration-200 ${
+                      location.pathname === link.path ? 'text-teal-600' : 'text-gray-700 hover:text-teal-600'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               ))}
               
-              <div className="flex items-center gap-3 ml-4">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 }}
+                className="flex items-center gap-3 ml-4"
+              >
                 <button
                   onClick={() => setIsCallbackOpen(true)}
                   className="flex items-center gap-2 text-teal-600 font-medium hover:text-teal-700 px-3 py-2 rounded-full hover:bg-teal-50 transition-colors"
@@ -82,7 +99,7 @@ export default function Navbar() {
                 >
                   Prendre Rendez-vous
                 </Link>
-              </div>
+              </motion.div>
             </div>
 
             {/* Mobile Menu Button */}

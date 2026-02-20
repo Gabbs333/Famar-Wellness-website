@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
   return (
@@ -15,7 +16,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left w-full pt-32 md:pt-48">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -36,19 +37,19 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <a
-              href="#contact"
+            <Link
+              to="/reservation"
               className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-teal-900 bg-lime-400 hover:bg-lime-300 transition-all shadow-lg hover:shadow-lime-400/30 transform hover:-translate-y-1"
             >
               Prendre Rendez-vous
               <ArrowRight className="ml-2 -mr-1 h-5 w-5" />
-            </a>
-            <a
-              href="#services"
+            </Link>
+            <Link
+              to="/services"
               className="inline-flex items-center justify-center px-8 py-4 border border-white/30 text-base font-medium rounded-full text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all"
             >
               Découvrir nos soins
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>
