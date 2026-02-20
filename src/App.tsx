@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Services from './components/Services';
@@ -16,6 +16,27 @@ import Blog from './components/Blog';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+
+// Admin Imports
+import { AuthProvider } from './admin/context/AuthContext';
+import Login from './admin/pages/Login';
+import AdminLayout from './admin/components/AdminLayout';
+import Dashboard from './admin/pages/Dashboard';
+import Contacts from './admin/pages/Contacts';
+import Bookings from './admin/pages/Bookings';
+import Posts from './admin/pages/Posts';
+
+// Public Layout Component
+const PublicLayout = () => (
+  <div className="font-sans antialiased text-gray-900 bg-white selection:bg-teal-100 selection:text-teal-900 flex flex-col min-h-screen">
+    <ScrollToTop />
+    <Navbar />
+    <main className="flex-grow">
+      <Outlet />
+    </main>
+    <Footer />
+  </div>
+);
 
 // Page Components
 const HomePage = () => (
@@ -94,12 +115,21 @@ const AboutPage = () => (
 
 export default function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="font-sans antialiased text-gray-900 bg-white selection:bg-teal-100 selection:text-teal-900 flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="contacts" element={<Contacts />} />
+            <Route path="bookings" element={<Bookings />} />
+            <Route path="posts" element={<Posts />} />
+          </Route>
+
+          {/* Public Routes */}
+          <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/technologies" element={<TechnologiesPage />} />
@@ -109,10 +139,9 @@ export default function App() {
             <Route path="/reservation" element={<BookingPage />} />
             <Route path="/actualites" element={<BlogPage />} />
             <Route path="/contact" element={<ContactPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
