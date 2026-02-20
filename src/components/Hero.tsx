@@ -47,7 +47,7 @@ export default function Hero() {
           
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white leading-tight mb-4">
             Santé et Bien-Être <br />
-            <span className="text-lime-400">à Bastos, Yaoundé</span>
+            <span className="text-lime-400">au Cameroun</span>
           </h1>
           
           <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl font-light leading-relaxed">
