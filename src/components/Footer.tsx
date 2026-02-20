@@ -46,10 +46,16 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-xs flex items-center justify-center gap-1">
-          <span>© {new Date().getFullYear()} Famar Wellness. Tous droits réservés. Fait avec</span>
-          <Heart size={12} className="text-red-500 fill-current" />
-          <span>au Cameroun.</span>
+        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-xs flex flex-col md:flex-row items-center justify-center gap-2">
+          <div className="flex items-center gap-1">
+            <span>© {new Date().getFullYear()} Famar Wellness. Tous droits réservés. Fait avec</span>
+            <Heart size={12} className="text-red-500 fill-current" />
+            <span>au Cameroun.</span>
+          </div>
+          <div className="hidden md:block w-1 h-1 bg-gray-600 rounded-full mx-2"></div>
+          <span className="opacity-75 hover:opacity-100 transition-opacity cursor-default bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-blue-500 font-semibold">
+            Digital Experience by Ka Labs 🚀
+          </span>
         </div>
       </div>
     </footer>
