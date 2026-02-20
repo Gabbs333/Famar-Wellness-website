@@ -15,24 +15,42 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-teal-900/80 to-black/40 mix-blend-multiply" />
       </div>
 
+      {/* Animated Background Blobs */}
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500 rounded-full blur-[120px] mix-blend-screen z-0"
+      />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.3, 1],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-lime-500 rounded-full blur-[100px] mix-blend-screen z-0"
+      />
+
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left w-full pt-32 md:pt-48">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left w-full h-full flex flex-col justify-center pt-24 md:pt-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="max-w-3xl"
         >
-          <span className="inline-block py-1 px-3 rounded-full bg-lime-500/20 text-lime-300 border border-lime-500/30 text-sm font-semibold tracking-wider mb-6 backdrop-blur-sm">
+          <span className="inline-block py-1 px-3 rounded-full bg-lime-500/20 text-lime-300 border border-lime-500/30 text-sm font-semibold tracking-wider mb-4 backdrop-blur-sm">
             CABINET DE MASSOTHÉRAPIE ULTRA MODERNE
           </span>
           
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white leading-tight mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white leading-tight mb-4">
             Santé et Bien-Être <br />
             <span className="text-lime-400">à Bastos, Yaoundé</span>
           </h1>
           
-          <p className="text-lg sm:text-xl text-gray-200 mb-10 max-w-2xl font-light leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl font-light leading-relaxed">
             Découvrez une approche globale alliant technologies de pointe et thérapies manuelles pour votre santé physique et mentale.
           </p>
 
@@ -59,7 +77,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30"
       >
         <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center p-1">
           <motion.div
@@ -69,6 +87,9 @@ export default function Hero() {
           />
         </div>
       </motion.div>
+
+      {/* Smooth Transition Gradient */}
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white via-white/50 to-transparent z-0 pointer-events-none" />
     </section>
   );
 }

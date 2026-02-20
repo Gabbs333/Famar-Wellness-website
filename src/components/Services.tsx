@@ -186,8 +186,33 @@ export default function Services() {
   return (
     <section id="services" className="py-24 bg-slate-50 relative overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-teal-100/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-lime-100/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.2, 1],
+          rotate: [0, 90, 0],
+          opacity: [0.4, 0.6, 0.4]
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-200 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 mix-blend-multiply -z-0" 
+      />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.3, 1],
+          x: [0, -50, 0],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-lime-200 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 mix-blend-multiply -z-0" 
+      />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.1, 1],
+          y: [0, 30, 0],
+          opacity: [0.2, 0.4, 0.2]
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-blue-200 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 mix-blend-multiply -z-0" 
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">

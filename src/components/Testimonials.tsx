@@ -36,6 +36,20 @@ const testimonials = [
     content: "Je ne pouvais plus marcher longtemps sans douleur. Le scanner IDIAG a permis de comprendre mon problème et le programme de soins m'a redonné ma mobilité.",
     rating: 5,
     image: "https://images.unsplash.com/photo-1551843021-d7563d03356e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    name: "Sophie K.",
+    role: "Cadre Supérieur",
+    content: "Après des mois de stress intense, j'ai essayé le massage relaxant. C'était une révélation. L'ambiance, les soins, tout est parfait pour déconnecter.",
+    rating: 5,
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    name: "Marc E.",
+    role: "Footballeur",
+    content: "La récupération est clé dans mon sport. Famar Wellness l'a bien compris. Leurs équipements sont au top niveau, comme en Europe.",
+    rating: 5,
+    image: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   }
 ];
 

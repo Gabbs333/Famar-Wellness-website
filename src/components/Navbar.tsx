@@ -39,11 +39,11 @@ export default function Navbar() {
     <>
       <nav
         className={`fixed w-full z-50 transition-all duration-300 ${
-          scrolled || location.pathname !== '/' ? 'bg-white/90 backdrop-blur-md shadow-md py-2' : 'bg-transparent py-4'
+          scrolled || location.pathname !== '/' ? 'bg-white/60 backdrop-blur-lg shadow-sm py-2' : 'bg-transparent py-4'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-28 md:h-40">
+          <div className="flex justify-between items-center h-20 md:h-28">
             {/* Logo */}
             <Link 
               to="/" 
@@ -56,7 +56,7 @@ export default function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Logo className="h-28 md:h-40 w-auto" />
+                <Logo className="h-20 md:h-28 w-auto" />
               </motion.div>
             </Link>
 
