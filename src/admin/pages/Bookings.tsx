@@ -15,21 +15,13 @@ interface Booking {
 }
 
 const Bookings = () => {
-<<<<<<< HEAD
-  const { token } = useAuth();
-=======
   const { token, logout } = useAuth();
->>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBookings();
-<<<<<<< HEAD
-  }, [token]);
-=======
   }, [token, logout]);
->>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
 
   const fetchBookings = async () => {
     try {
@@ -38,11 +30,6 @@ const Bookings = () => {
           'Authorization': `Bearer ${token}`,
         },
       });
-<<<<<<< HEAD
-      if (response.ok) {
-        const data = await response.json();
-        setBookings(data);
-=======
       console.log('Bookings response status:', response.status);
       if (response.ok) {
         const data = await response.json();
@@ -50,7 +37,6 @@ const Bookings = () => {
         setBookings(data);
       } else if (response.status === 401) {
         logout(); // Token expired or invalid
->>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
       }
     } catch (error) {
       console.error('Failed to fetch bookings', error);
@@ -79,8 +65,6 @@ const Bookings = () => {
 
   if (loading) return <div className="text-center p-8">Loading...</div>;
 
-<<<<<<< HEAD
-=======
   if (bookings.length === 0) {
     return (
       <div>
@@ -100,7 +84,6 @@ const Bookings = () => {
     }
   };
 
->>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Bookings</h2>
@@ -120,11 +103,7 @@ const Bookings = () => {
               <tr key={booking.id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-<<<<<<< HEAD
-                    {format(new Date(booking.date), 'MMM d, yyyy')}
-=======
                     {formatDate(booking.date)}
->>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
                   </div>
                   <div className="text-sm text-gray-500">{booking.time}</div>
                 </td>
