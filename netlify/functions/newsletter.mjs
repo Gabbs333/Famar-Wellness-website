@@ -3,10 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 
 // Use service role key to bypass RLS
 const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
 
 console.log('Newsletter function - Supabase URL:', supabaseUrl ? 'Set' : 'Not set');
-console.log('Newsletter function - Supabase Key:', supabaseKey ? 'Set (length: ' + supabaseKey.length + ')' : 'Not set');
+console.log('Newsletter function - Supabase Key present:', supabaseKey ? 'Yes' : 'No');
+console.log('Newsletter function - Using key type:', 
+  process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SERVICE_ROLE' : 
+  process.env.SUPABASE_ANON_KEY ? 'ANON' : 'NONE');
+console.log('Newsletter function - Key first 20 chars:', supabaseKey ? supabaseKey.substring(0, 20) + '...' : 'None');
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
