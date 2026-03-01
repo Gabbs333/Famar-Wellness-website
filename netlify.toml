@@ -5,6 +5,9 @@
 [build.environment]
   NODE_VERSION = "18"
 
+[functions]
+  directory = "netlify/functions"
+
 # API routes to Netlify Functions
 [[redirects]]
   from = "/api/book"
