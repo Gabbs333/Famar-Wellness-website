@@ -7,7 +7,8 @@ import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dbPath = path.join(__dirname, '../../famar.db');
+// Database is in the same folder as this function
+const dbPath = path.join(__dirname, 'famar.db');
 
 const app = express();
 const db = new Database(dbPath);
