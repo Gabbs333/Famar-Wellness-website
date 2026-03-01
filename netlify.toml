@@ -5,18 +5,14 @@
 [build.environment]
   NODE_VERSION = "18"
 
-# API routes - map to Netlify Functions
-[[redirects]]
-  from = "/api/book"
-  to = "/.netlify/functions/book"
-  status = 200
-
+# Redirect all API routes to the serverless function
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api"
+  to = "/.netlify/functions/server/:splat"
   status = 200
+  force = true
 
-# SPA routing - all other routes go to index.html
+# SPA routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
