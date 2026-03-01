@@ -1,7 +1,98 @@
 import { motion } from 'motion/react';
 import { Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: '',
+    firstName: '',
+    phone: '',
+    email: '',
+    city: '',
+    subject: '',
+    message: '',
+    newsletter: false
+  });
+  
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData({ ...formData, [name]: checked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    // Validation
+    if (!formData.name || !formData.phone || !formData.email) {
+      setError('Les champs Nom, Téléphone et Email sont obligatoires.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: `${formData.name} ${formData.firstName}`.trim(),
+          email: formData.email,
+          phone: formData.phone,
+          message: `Sujet: ${formData.subject}\nVille: ${formData.city}\n\nMessage: ${formData.message}`,
+          type: 'contact'
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        setSuccess(true);
+        // Reset form
+        setFormData({
+          name: '',
+          firstName: '',
+          phone: '',
+          email: '',
+          city: '',
+          subject: '',
+          message: '',
+          newsletter: false
+        });
+        
+        // If newsletter checkbox is checked, subscribe
+        if (formData.newsletter) {
+          try {
+            await fetch('/api/newsletter', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: formData.email }),
+            });
+          } catch (err) {
+            // Silent fail for newsletter subscription
+            console.log('Newsletter subscription failed:', err);
+          }
+        }
+      } else {
+        setError(data.error || `Erreur serveur (${response.status})`);
+      }
+    } catch (err) {
+      console.error('Contact form error:', err);
+      setError('Erreur de connexion au serveur. Vérifiez votre connexion.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-24 bg-slate-900 text-white relative overflow-hidden">
       {/* Background Pattern */}
@@ -76,37 +167,94 @@ export default function Contact() {
             className="bg-white rounded-3xl p-8 text-gray-900 shadow-2xl"
           >
             <h3 className="text-2xl font-bold mb-6">Envoyez-nous un message</h3>
-            <form className="space-y-4">
+            
+            {success && (
+              <div className="mb-6 p-4 bg-green-50 text-green-700 rounded-lg">
+                Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.
+              </div>
+            )}
+            
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg">
+                {error}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
-                  <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="Votre nom" />
+                  <input 
+                    type="text" 
+                    name="name"
+                    required 
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" 
+                    placeholder="Votre nom" 
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
-                  <input type="text" className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="Votre prénom" />
+                  <input 
+                    type="text" 
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" 
+                    placeholder="Votre prénom" 
+                  />
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone *</label>
-                  <input type="tel" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="Votre numéro" />
+                  <input 
+                    type="tel" 
+                    name="phone"
+                    required 
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" 
+                    placeholder="Votre numéro" 
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                  <input type="email" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="votre@email.com" />
+                  <input 
+                    type="email" 
+                    name="email"
+                    required 
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" 
+                    placeholder="votre@email.com" 
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                  <input type="text" className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="Votre ville" />
+                  <input 
+                    type="text" 
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" 
+                    placeholder="Votre ville" 
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Sujet *</label>
-                  <select className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all">
+                  <select 
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all"
+                  >
                     <option value="">Votre demande concerne...</option>
                     <option value="rdv">Prise de rendez-vous</option>
                     <option value="info">Demande d'information</option>
@@ -118,18 +266,36 @@ export default function Contact() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea rows={4} className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="Comment pouvons-nous vous aider ?"></textarea>
+                <textarea 
+                  rows={4} 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" 
+                  placeholder="Comment pouvons-nous vous aider ?"
+                ></textarea>
               </div>
 
               <div className="flex items-start gap-2 pt-2">
-                <input type="checkbox" id="newsletter" className="mt-1 rounded text-teal-600 focus:ring-teal-500" />
+                <input 
+                  type="checkbox" 
+                  id="newsletter" 
+                  name="newsletter"
+                  checked={formData.newsletter}
+                  onChange={handleChange}
+                  className="mt-1 rounded text-teal-600 focus:ring-teal-500" 
+                />
                 <label htmlFor="newsletter" className="text-sm text-gray-500">
                   J'accepte de recevoir des informations et offres commerciales par email.
                 </label>
               </div>
 
-              <button type="submit" className="w-full py-4 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20">
-                Envoyer le message
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full py-4 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Envoi en cours...' : 'Envoyer le message'}
               </button>
             </form>
           </motion.div>
