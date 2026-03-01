@@ -8,6 +8,12 @@ import crypto from 'crypto';
 const app = express();
 const PORT = 3000;
 
+// Logging Middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -167,12 +173,40 @@ app.post('/api/book', async (req, res) => {
   const auth = getAuthClient();
   const { name, email, phone, service, date, time } = req.body;
 
+<<<<<<< HEAD
+=======
+  console.log('Booking request received:', req.body);
+
+>>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
   if (!name || !email || !date || !time) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   // 1. Save to Local DB
   let bookingId;
+<<<<<<< HEAD
+=======
+  try {
+    const result = db.prepare(
+      'INSERT INTO bookings (service, date, time, client_name, client_email, client_phone) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(service, date, time, name, email, phone);
+    bookingId = result.lastInsertRowid;
+  } catch (err) {
+    console.error('Local booking error:', err);
+    // Continue to try Google Calendar even if local DB fails? 
+    // Ideally we want both. Let's proceed but log error.
+  }
+
+  // 2. Save to Google Calendar (if configured)
+  if (!auth) {
+    console.log('Missing Google Credentials - Simulating Booking Success');
+    console.log('Booking Data:', req.body);
+    // Simulate a delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return res.json({ success: true, message: 'Booking simulated (Demo Mode)' });
+  }
+
+>>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
   try {
     const result = db.prepare(
       'INSERT INTO bookings (service, date, time, client_name, client_email, client_phone) VALUES (?, ?, ?, ?, ?, ?)'

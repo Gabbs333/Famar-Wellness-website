@@ -14,13 +14,21 @@ interface Contact {
 }
 
 const Contacts = () => {
+<<<<<<< HEAD
   const { token } = useAuth();
+=======
+  const { token, logout } = useAuth();
+>>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchContacts();
+<<<<<<< HEAD
   }, [token]);
+=======
+  }, [token, logout]);
+>>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
 
   const fetchContacts = async () => {
     try {
@@ -32,6 +40,11 @@ const Contacts = () => {
       if (response.ok) {
         const data = await response.json();
         setContacts(data);
+<<<<<<< HEAD
+=======
+      } else if (response.status === 401) {
+        logout(); // Token expired
+>>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
       }
     } catch (error) {
       console.error('Failed to fetch contacts', error);

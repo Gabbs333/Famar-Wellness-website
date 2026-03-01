@@ -68,15 +68,18 @@ export default function Booking() {
         }),
       });
 
-      const data = await response.json();
+      console.log('Booking response status:', response.status);
+      const data = await response.json().catch(() => ({})); // Handle non-JSON responses
 
       if (response.ok) {
         setSuccess(true);
       } else {
-        setError(data.error || 'Une erreur est survenue.');
+        console.error('Booking failed:', data);
+        setError(data.error || `Erreur serveur (${response.status})`);
       }
     } catch (err) {
-      setError('Erreur de connexion au serveur.');
+      console.error('Booking fetch error:', err);
+      setError('Erreur de connexion au serveur. Vérifiez votre connexion.');
     } finally {
       setLoading(false);
     }
