@@ -57,7 +57,12 @@ export default function Booking() {
     setError(null);
 
     try {
-      const response = await fetch('/api/book', {
+      // Use direct Netlify function URL for now
+      // TODO: Change back to /api/book once redirections are working
+      const apiUrl = '/.netlify/functions/book';
+      console.log('Calling API URL:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
