@@ -184,6 +184,18 @@ app.post('/api/newsletter', async (req, res) => {
   }
 });
 
+// Debug endpoint
+app.get('/api/debug', (req, res) => {
+  return res.status(200).json({
+    message: 'Debug info from dev-server.js',
+    path: req.path,
+    url: req.url,
+    method: req.method,
+    headers: req.headers,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // ========== ADMIN AUTHENTICATION ==========
 
 // Login endpoint
