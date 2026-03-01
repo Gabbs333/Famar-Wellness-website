@@ -10,26 +10,11 @@
 
 # API routes to Netlify Functions
 [[redirects]]
-  from = "/api/book"
-  to = "/.netlify/functions/book"
-  status = 200
-
-[[redirects]]
-  from = "/api/contact"
-  to = "/.netlify/functions/contact"
-  status = 200
-
-[[redirects]]
-  from = "/api/newsletter"
-  to = "/.netlify/functions/newsletter"
-  status = 200
-
-[[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api-info"
+  to = "/.netlify/functions/server"
   status = 200
 
-# SPA routing
+# SPA routing - must come AFTER API routes
 [[redirects]]
   from = "/*"
   to = "/index.html"

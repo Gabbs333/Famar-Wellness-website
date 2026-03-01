@@ -1,11 +1,22 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
-import { google } from 'googleapis';
-import db from './src/db.ts';
+import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import serverless from 'serverless-http';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// Supabase client
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error('Missing Supabase credentials. Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.');
+  process.exit(1);
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Logging Middleware
 app.use((req, res, next) => {
@@ -23,7 +34,7 @@ const generateToken = () => {
   return crypto.randomBytes(32).toString('hex');
 };
 
-const verifyPassword = (password: string, hash: string) => {
+const verifyPassword = async (password: string, hash: string) => {
   const [salt, originalHash] = hash.split(':');
   const derivedHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
   return originalHash === derivedHash;
@@ -37,40 +48,28 @@ const requireAuth = (req: express.Request, res: express.Response, next: express.
     return res.status(401).json({ error: 'Unauthorized' });
   }
   
-  // Extend session?
   next();
-};
-
-// --- GOOGLE CALENDAR SETUP ---
-const SCOPES = ['https://www.googleapis.com/auth/calendar'];
-const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID || 'primary';
-
-const getAuthClient = () => {
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-  const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-
-  if (!privateKey || !clientEmail) {
-    return null;
-  }
-
-  return new google.auth.JWT(
-    clientEmail,
-    undefined,
-    privateKey,
-    SCOPES
-  );
 };
 
 // --- API ROUTES ---
 
 // 1. Auth
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const { username, password } = req.body;
   
   try {
-    const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username) as any;
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .single();
     
-    if (!user || !verifyPassword(password, user.password_hash)) {
+    if (error || !user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const isValid = await verifyPassword(password, user.password_hash);
+    if (!isValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
@@ -103,7 +102,7 @@ app.get('/api/auth/me', requireAuth, (req, res) => {
 
 // 2. Public Actions (Contact, Newsletter, Booking)
 
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
   const { name, email, phone, message, type = 'contact' } = req.body;
   
   if (!name || (!email && !phone)) {
@@ -111,9 +110,16 @@ app.post('/api/contact', (req, res) => {
   }
 
   try {
-    db.prepare(
-      'INSERT INTO contacts (name, email, phone, message, type) VALUES (?, ?, ?, ?, ?)'
-    ).run(name, email, phone, message, type);
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert([{ name, email, phone, message, type }])
+      .select();
+
+    if (error) {
+      console.error('Contact error:', error);
+      return res.status(500).json({ error: 'Failed to send message' });
+    }
+
     res.json({ success: true, message: 'Message sent' });
   } catch (err) {
     console.error('Contact error:', err);
@@ -121,55 +127,32 @@ app.post('/api/contact', (req, res) => {
   }
 });
 
-app.post('/api/newsletter', (req, res) => {
+app.post('/api/newsletter', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email required' });
 
   try {
-    db.prepare('INSERT INTO subscribers (email) VALUES (?)').run(email);
-    res.json({ success: true, message: 'Subscribed' });
-  } catch (err: any) {
-    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-      return res.json({ success: true, message: 'Already subscribed' });
+    const { data, error } = await supabase
+      .from('subscribers')
+      .insert([{ email }])
+      .select();
+
+    if (error) {
+      if (error.code === '23505') { // Unique violation
+        return res.json({ success: true, message: 'Already subscribed' });
+      }
+      console.error('Newsletter error:', error);
+      return res.status(500).json({ error: 'Failed to subscribe' });
     }
+
+    res.json({ success: true, message: 'Subscribed' });
+  } catch (err) {
     console.error('Newsletter error:', err);
     res.status(500).json({ error: 'Failed to subscribe' });
   }
 });
 
-app.get('/api/availability', async (req, res) => {
-  const auth = getAuthClient();
-  
-  if (!auth) return res.json({ busy: [] });
-
-  const { date } = req.query;
-  if (!date || typeof date !== 'string') {
-    return res.status(400).json({ error: 'Date parameter is required (YYYY-MM-DD)' });
-  }
-
-  try {
-    const calendar = google.calendar({ version: 'v3', auth });
-    const timeMin = new Date(`${date}T00:00:00`);
-    const timeMax = new Date(`${date}T23:59:59`);
-
-    const response = await calendar.freebusy.query({
-      requestBody: {
-        timeMin: timeMin.toISOString(),
-        timeMax: timeMax.toISOString(),
-        items: [{ id: CALENDAR_ID }],
-      },
-    });
-
-    const busySlots = response.data.calendars?.[CALENDAR_ID]?.busy || [];
-    res.json({ busy: busySlots });
-  } catch (error) {
-    console.error('Error fetching availability:', error);
-    res.status(500).json({ error: 'Failed to fetch availability' });
-  }
-});
-
 app.post('/api/book', async (req, res) => {
-  const auth = getAuthClient();
   const { name, email, phone, service, date, time } = req.body;
 
   console.log('Booking request received:', req.body);
@@ -178,45 +161,33 @@ app.post('/api/book', async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  // 1. Save to Local DB
-  let bookingId;
   try {
-    const result = db.prepare(
-      'INSERT INTO bookings (service, date, time, client_name, client_email, client_phone) VALUES (?, ?, ?, ?, ?, ?)'
-    ).run(service, date, time, name, email, phone);
-    bookingId = result.lastInsertRowid;
-  } catch (err) {
-    console.error('Local booking error:', err);
-    // Continue to try Google Calendar even if local DB fails
-  }
+    const { data, error } = await supabase
+      .from('bookings')
+      .insert([{
+        service: service || '',
+        date,
+        time,
+        client_name: name,
+        client_email: email,
+        client_phone: phone || null,
+        status: 'confirmed'
+      }])
+      .select();
 
-  // 2. Save to Google Calendar (if configured)
-  if (!auth) {
-    console.log('Missing Google Credentials - Simulating Booking Success');
-    console.log('Booking Data:', req.body);
-    // Simulate a delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return res.json({ success: true, message: 'Booking simulated (Demo Mode)' });
-  }
+    if (error) {
+      console.error('Supabase booking error:', error);
+      return res.status(500).json({ 
+        error: 'Failed to save booking',
+        details: error.message 
+      });
+    }
 
-  try {
-    const calendar = google.calendar({ version: 'v3', auth });
-    const startDateTime = new Date(`${date}T${time}:00`);
-    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
-
-    const event = {
-      summary: `Rdv: ${service} - ${name}`,
-      description: `Client: ${name}\nEmail: ${email}\nTel: ${phone}\nService: ${service}`,
-      start: { dateTime: startDateTime.toISOString(), timeZone: 'Africa/Douala' },
-      end: { dateTime: endDateTime.toISOString(), timeZone: 'Africa/Douala' },
-    };
-
-    const response = await calendar.events.insert({
-      calendarId: CALENDAR_ID,
-      requestBody: event,
+    res.json({ 
+      success: true, 
+      message: 'Réservation confirmée',
+      booking: data[0]
     });
-
-    res.json({ success: true, message: 'Booking confirmed' });
   } catch (error) {
     console.error('Error creating booking:', error);
     res.status(500).json({ error: 'Failed to create booking' });
@@ -226,31 +197,61 @@ app.post('/api/book', async (req, res) => {
 
 // 3. Admin Routes (Protected)
 
-app.get('/api/admin/stats', requireAuth, (req, res) => {
+app.get('/api/admin/stats', requireAuth, async (req, res) => {
     try {
-        const contactsCount = db.prepare("SELECT COUNT(*) as count FROM contacts WHERE status = 'new'").get() as any;
-        const bookingsCount = db.prepare("SELECT COUNT(*) as count FROM bookings WHERE date >= date('now')").get() as any;
-        const subscribersCount = db.prepare("SELECT COUNT(*) as count FROM subscribers").get() as any;
-        
+        // Get new contacts count
+        const { count: newContacts } = await supabase
+          .from('contacts')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'new');
+
+        // Get upcoming bookings count (today and future)
+        const today = new Date().toISOString().split('T')[0];
+        const { count: upcomingBookings } = await supabase
+          .from('bookings')
+          .select('*', { count: 'exact', head: true })
+          .gte('date', today);
+
+        // Get subscribers count
+        const { count: subscribers } = await supabase
+          .from('subscribers')
+          .select('*', { count: 'exact', head: true });
+
         res.json({
-            newContacts: contactsCount.count,
-            upcomingBookings: bookingsCount.count,
-            subscribers: subscribersCount.count
+            newContacts: newContacts || 0,
+            upcomingBookings: upcomingBookings || 0,
+            subscribers: subscribers || 0
         });
     } catch (err) {
+        console.error('Stats error:', err);
         res.status(500).json({ error: 'Failed to fetch stats' });
     }
 });
 
-app.get('/api/admin/contacts', requireAuth, (req, res) => {
-    const contacts = db.prepare('SELECT * FROM contacts ORDER BY created_at DESC').all();
-    res.json(contacts);
+app.get('/api/admin/contacts', requireAuth, async (req, res) => {
+    try {
+        const { data: contacts, error } = await supabase
+          .from('contacts')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        res.json(contacts);
+    } catch (err) {
+        console.error('Contacts error:', err);
+        res.status(500).json({ error: 'Failed to fetch contacts' });
+    }
 });
 
-app.patch('/api/admin/contacts/:id', requireAuth, (req, res) => {
+app.patch('/api/admin/contacts/:id', requireAuth, async (req, res) => {
     const { status } = req.body;
     try {
-        db.prepare('UPDATE contacts SET status = ? WHERE id = ?').run(status, req.params.id);
+        const { error } = await supabase
+          .from('contacts')
+          .update({ status })
+          .eq('id', req.params.id);
+
+        if (error) throw error;
         res.json({ success: true });
     } catch (err) {
         console.error('Update contact error:', err);
@@ -258,15 +259,31 @@ app.patch('/api/admin/contacts/:id', requireAuth, (req, res) => {
     }
 });
 
-app.get('/api/admin/bookings', requireAuth, (req, res) => {
-    const bookings = db.prepare('SELECT * FROM bookings ORDER BY date DESC, time DESC').all();
-    res.json(bookings);
+app.get('/api/admin/bookings', requireAuth, async (req, res) => {
+    try {
+        const { data: bookings, error } = await supabase
+          .from('bookings')
+          .select('*')
+          .order('date', { ascending: false })
+          .order('time', { ascending: false });
+
+        if (error) throw error;
+        res.json(bookings);
+    } catch (err) {
+        console.error('Bookings error:', err);
+        res.status(500).json({ error: 'Failed to fetch bookings' });
+    }
 });
 
-app.patch('/api/admin/bookings/:id', requireAuth, (req, res) => {
+app.patch('/api/admin/bookings/:id', requireAuth, async (req, res) => {
     const { status } = req.body;
     try {
-        db.prepare('UPDATE bookings SET status = ? WHERE id = ?').run(status, req.params.id);
+        const { error } = await supabase
+          .from('bookings')
+          .update({ status })
+          .eq('id', req.params.id);
+
+        if (error) throw error;
         res.json({ success: true });
     } catch (err) {
         console.error('Update booking error:', err);
@@ -274,28 +291,62 @@ app.patch('/api/admin/bookings/:id', requireAuth, (req, res) => {
     }
 });
 
-app.get('/api/admin/subscribers', requireAuth, (req, res) => {
-    const subscribers = db.prepare('SELECT * FROM subscribers ORDER BY created_at DESC').all();
-    res.json(subscribers);
+app.get('/api/admin/subscribers', requireAuth, async (req, res) => {
+    try {
+        const { data: subscribers, error } = await supabase
+          .from('subscribers')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        res.json(subscribers);
+    } catch (err) {
+        console.error('Subscribers error:', err);
+        res.status(500).json({ error: 'Failed to fetch subscribers' });
+    }
 });
 
 // Blog Posts
-app.get('/api/posts', (req, res) => {
+app.get('/api/posts', async (req, res) => {
     // Public endpoint for frontend
-    const posts = db.prepare('SELECT * FROM posts WHERE published = 1 ORDER BY created_at DESC').all();
-    res.json(posts);
+    try {
+        const { data: posts, error } = await supabase
+          .from('posts')
+          .select('*')
+          .eq('published', true)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        res.json(posts);
+    } catch (err) {
+        console.error('Posts error:', err);
+        res.status(500).json({ error: 'Failed to fetch posts' });
+    }
 });
 
-app.get('/api/admin/posts', requireAuth, (req, res) => {
-    const posts = db.prepare('SELECT * FROM posts ORDER BY created_at DESC').all();
-    res.json(posts);
+app.get('/api/admin/posts', requireAuth, async (req, res) => {
+    try {
+        const { data: posts, error } = await supabase
+          .from('posts')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        res.json(posts);
+    } catch (err) {
+        console.error('Posts error:', err);
+        res.status(500).json({ error: 'Failed to fetch posts' });
+    }
 });
 
-app.post('/api/admin/posts', requireAuth, (req, res) => {
+app.post('/api/admin/posts', requireAuth, async (req, res) => {
     const { title, slug, content, excerpt, image_url, published } = req.body;
     try {
-        const stmt = db.prepare('INSERT INTO posts (title, slug, content, excerpt, image_url, published) VALUES (?, ?, ?, ?, ?, ?)');
-        stmt.run(title, slug, content, excerpt, image_url, published ? 1 : 0);
+        const { error } = await supabase
+          .from('posts')
+          .insert([{ title, slug, content, excerpt, image_url, published }]);
+
+        if (error) throw error;
         res.json({ success: true });
     } catch (err) {
         console.error(err);
@@ -303,11 +354,15 @@ app.post('/api/admin/posts', requireAuth, (req, res) => {
     }
 });
 
-app.put('/api/admin/posts/:id', requireAuth, (req, res) => {
+app.put('/api/admin/posts/:id', requireAuth, async (req, res) => {
     const { title, slug, content, excerpt, image_url, published } = req.body;
     try {
-        const stmt = db.prepare('UPDATE posts SET title=?, slug=?, content=?, excerpt=?, image_url=?, published=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
-        stmt.run(title, slug, content, excerpt, image_url, published ? 1 : 0, req.params.id);
+        const { error } = await supabase
+          .from('posts')
+          .update({ title, slug, content, excerpt, image_url, published, updated_at: new Date().toISOString() })
+          .eq('id', req.params.id);
+
+        if (error) throw error;
         res.json({ success: true });
     } catch (err) {
         console.error(err);
@@ -315,17 +370,27 @@ app.put('/api/admin/posts/:id', requireAuth, (req, res) => {
     }
 });
 
-app.delete('/api/admin/posts/:id', requireAuth, (req, res) => {
+app.delete('/api/admin/posts/:id', requireAuth, async (req, res) => {
     try {
-        db.prepare('DELETE FROM posts WHERE id = ?').run(req.params.id);
+        const { error } = await supabase
+          .from('posts')
+          .delete()
+          .eq('id', req.params.id);
+
+        if (error) throw error;
         res.json({ success: true });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: 'Failed to delete post' });
     }
 });
 
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
-// Vite Middleware
+// Vite Middleware for development
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
@@ -340,7 +405,14 @@ async function startServer() {
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Supabase connected: ${supabaseUrl ? 'Yes' : 'No'}`);
   });
 }
 
-startServer();
+// Export for Netlify Functions
+export const handler = serverless(app);
+
+// Start server if not in Netlify Functions environment
+if (process.env.NETLIFY !== 'true') {
+  startServer();
+}
