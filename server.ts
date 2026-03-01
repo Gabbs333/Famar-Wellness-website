@@ -1,7 +1,6 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import { google } from 'googleapis';
-import { startOfDay, endOfDay, addDays, parseISO } from 'date-fns';
 import db from './src/db.ts';
 import crypto from 'crypto';
 
@@ -173,19 +172,14 @@ app.post('/api/book', async (req, res) => {
   const auth = getAuthClient();
   const { name, email, phone, service, date, time } = req.body;
 
-<<<<<<< HEAD
-=======
   console.log('Booking request received:', req.body);
 
->>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
   if (!name || !email || !date || !time) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   // 1. Save to Local DB
   let bookingId;
-<<<<<<< HEAD
-=======
   try {
     const result = db.prepare(
       'INSERT INTO bookings (service, date, time, client_name, client_email, client_phone) VALUES (?, ?, ?, ?, ?, ?)'
@@ -193,8 +187,7 @@ app.post('/api/book', async (req, res) => {
     bookingId = result.lastInsertRowid;
   } catch (err) {
     console.error('Local booking error:', err);
-    // Continue to try Google Calendar even if local DB fails? 
-    // Ideally we want both. Let's proceed but log error.
+    // Continue to try Google Calendar even if local DB fails
   }
 
   // 2. Save to Google Calendar (if configured)
@@ -206,26 +199,6 @@ app.post('/api/book', async (req, res) => {
     return res.json({ success: true, message: 'Booking simulated (Demo Mode)' });
   }
 
->>>>>>> 9d43ae4... feat: update project with latest local changes including admin pages, database, and server improvements
-  try {
-    const result = db.prepare(
-      'INSERT INTO bookings (service, date, time, client_name, client_email, client_phone) VALUES (?, ?, ?, ?, ?, ?)'
-    ).run(service, date, time, name, email, phone);
-    bookingId = result.lastInsertRowid;
-  } catch (err) {
-    console.error('Local booking error:', err);
-    // Continue to try Google Calendar even if local DB fails? 
-    // Ideally we want both. Let's proceed but log error.
-  }
-
-  // 2. Save to Google Calendar (if configured)
-  if (!auth) {
-    console.log('Missing Google Credentials - Simulating Booking Success');
-    // Simulate a delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return res.json({ success: true, message: 'Booking simulated (Demo Mode)', localId: bookingId });
-  }
-
   try {
     const calendar = google.calendar({ version: 'v3', auth });
     const startDateTime = new Date(`${date}T${time}:00`);
@@ -233,20 +206,15 @@ app.post('/api/book', async (req, res) => {
 
     const event = {
       summary: `Rdv: ${service} - ${name}`,
-      description: `Client: ${name}\nEmail: ${email}\nTel: ${phone}\nService: ${service}\nLocal ID: ${bookingId}`,
+      description: `Client: ${name}\nEmail: ${email}\nTel: ${phone}\nService: ${service}`,
       start: { dateTime: startDateTime.toISOString(), timeZone: 'Africa/Douala' },
       end: { dateTime: endDateTime.toISOString(), timeZone: 'Africa/Douala' },
     };
 
-    const gResponse = await calendar.events.insert({
+    const response = await calendar.events.insert({
       calendarId: CALENDAR_ID,
       requestBody: event,
     });
-
-    // Update local DB with Google Event ID
-    if (bookingId && gResponse.data.id) {
-        db.prepare('UPDATE bookings SET google_event_id = ? WHERE id = ?').run(gResponse.data.id, bookingId);
-    }
 
     res.json({ success: true, message: 'Booking confirmed' });
   } catch (error) {
