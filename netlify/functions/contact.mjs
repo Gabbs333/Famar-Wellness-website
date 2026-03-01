@@ -6,25 +6,23 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY || ''
 );
 
-export const handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
+export default async (req, context) => {
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   try {
-    const body = JSON.parse(event.body || '{}');
+    const body = await req.json();
     const { name, email, phone, message, type = 'contact' } = body;
 
     if (!name || (!email && !phone)) {
-      return {
-        statusCode: 400,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Name and contact info required' })
-      };
+      return new Response(JSON.stringify({ error: 'Name and contact info required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     const { data, error } = await supabase
@@ -34,24 +32,21 @@ export const handler = async (event, context) => {
 
     if (error) {
       console.error('Supabase error:', error);
-      return {
-        statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Failed to send message' })
-      };
+      return new Response(JSON.stringify({ error: 'Failed to send message' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ success: true, message: 'Message sent' })
-    };
+    return new Response(JSON.stringify({ success: true, message: 'Message sent' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error('Contact error:', error);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Internal server error' })
-    };
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };

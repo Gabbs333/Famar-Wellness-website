@@ -6,29 +6,27 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY || ''
 );
 
-export const handler = async (event, context) => {
+export default async (req, context) => {
   // Only allow POST
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   try {
-    const body = JSON.parse(event.body || '{}');
+    const body = await req.json();
     const { name, email, phone, service, date, time } = body;
 
     console.log('Booking request:', { name, email, service, date, time });
 
     // Validate
     if (!name || !email || !date || !time) {
-      return {
-        statusCode: 400,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Missing required fields' })
-      };
+      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     // Save to Supabase
@@ -49,31 +47,28 @@ export const handler = async (event, context) => {
 
     if (error) {
       console.error('Supabase error:', error);
-      return {
-        statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          error: 'Failed to save booking',
-          details: error.message 
-        })
-      };
+      return new Response(JSON.stringify({ 
+        error: 'Failed to save booking',
+        details: error.message 
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        success: true,
-        message: 'Réservation confirmée',
-        booking: data[0]
-      })
-    };
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'Réservation confirmée',
+      booking: data[0]
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error('Booking error:', error);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Internal server error' })
-    };
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };

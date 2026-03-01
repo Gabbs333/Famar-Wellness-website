@@ -6,25 +6,23 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY || ''
 );
 
-export const handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
+export default async (req, context) => {
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   try {
-    const body = JSON.parse(event.body || '{}');
+    const body = await req.json();
     const { email } = body;
 
     if (!email) {
-      return {
-        statusCode: 400,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Email required' })
-      };
+      return new Response(JSON.stringify({ error: 'Email required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     const { data, error } = await supabase
@@ -35,32 +33,28 @@ export const handler = async (event, context) => {
     if (error) {
       // Check if it's a unique constraint violation
       if (error.code === '23505') {
-        return {
-          statusCode: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ success: true, message: 'Already subscribed' })
-        };
+        return new Response(JSON.stringify({ success: true, message: 'Already subscribed' }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
       
       console.error('Supabase error:', error);
-      return {
-        statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Failed to subscribe' })
-      };
+      return new Response(JSON.stringify({ error: 'Failed to subscribe' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ success: true, message: 'Subscribed' })
-    };
+    return new Response(JSON.stringify({ success: true, message: 'Subscribed' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error('Newsletter error:', error);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Internal server error' })
-    };
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };
