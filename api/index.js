@@ -1,5 +1,6 @@
 // Vercel Serverless Function - Main API handler
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 // Initialize Supabase
 const supabaseUrl = process.env.SUPABASE_URL || '';
@@ -8,17 +9,20 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABAS
 // Debug environment variables
 console.log('Supabase URL present:', !!supabaseUrl);
 console.log('Supabase Key present:', !!supabaseKey);
-console.log('SUPABASE_SERVICE_ROLE_KEY present:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
-console.log('SUPABASE_ANON_KEY present:', !!process.env.SUPABASE_ANON_KEY);
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('Missing Supabase environment variables!');
-  console.error('SUPABASE_URL:', supabaseUrl ? 'Set' : 'Missing');
-  console.error('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Missing');
-  console.error('SUPABASE_ANON_KEY:', process.env.SUPABASE_ANON_KEY ? 'Set' : 'Missing');
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Simple authentication helper
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+
+// Helper to generate token (simplified for now)
+const generateToken = () => {
+  return crypto.randomBytes(32).toString('hex');
+};
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -46,30 +50,49 @@ export default async function handler(req, res) {
   console.log('API Request:', {
     method: req.method,
     path: pathname,
-    apiPath: apiPath,
-    url: req.url
+    apiPath: apiPath
   });
 
   try {
-    // Route based on path
-    switch (apiPath) {
-      case 'book':
-        return await handleBooking(req, res);
-      case 'contact':
-        return await handleContact(req, res);
-      case 'newsletter':
-        return await handleNewsletter(req, res);
-      case 'health':
-        return res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
-      default:
-        console.log('API endpoint not found:', apiPath);
-        return res.status(404).json({ error: 'API endpoint not found', path: apiPath });
+    // Route based on path with pattern matching
+    if (apiPath === 'book') {
+      return await handleBooking(req, res);
+    } else if (apiPath === 'contact') {
+      return await handleContact(req, res);
+    } else if (apiPath === 'newsletter') {
+      return await handleNewsletter(req, res);
+    } else if (apiPath === 'health') {
+      return res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+    } else if (apiPath === 'debug') {
+      // Debug endpoint
+      return res.status(200).json({
+        message: 'API debug info',
+        apiPath: apiPath,
+        pathname: pathname,
+        method: req.method,
+        env: {
+          supabaseUrl: process.env.SUPABASE_URL ? 'Set' : 'Not set',
+          adminUsername: process.env.ADMIN_USERNAME ? 'Set' : 'Not set'
+        },
+        timestamp: new Date().toISOString()
+      });
+    } else if (apiPath === 'auth/login' || apiPath.startsWith('auth/login')) {
+      return await handleLogin(req, res);
+    } else {
+      console.log('API endpoint not found:', apiPath);
+      return res.status(404).json({ error: 'API endpoint not found', path: apiPath });
     }
   } catch (error) {
     console.error('API error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      message: error.message,
+      stack: error.stack
+    });
   }
 }
+
+// ========== HANDLER FUNCTIONS ==========
 
 // Booking handler
 async function handleBooking(req, res) {
@@ -179,7 +202,7 @@ async function handleNewsletter(req, res) {
 
     if (error) {
       // Check if it's a duplicate
-      if (error.code === '23505') { // Unique violation
+      if (error.code === '23505') {
         return res.status(200).json({ 
           success: true, 
           message: 'Already subscribed' 
@@ -200,6 +223,36 @@ async function handleNewsletter(req, res) {
     });
   } catch (error) {
     console.error('Newsletter error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+// Login handler
+async function handleLogin(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password required' });
+    }
+
+    // Simple hardcoded credentials for now
+    if (username === ADMIN_USERNAME && password === 'admin') {
+      const token = generateToken();
+      return res.status(200).json({ 
+        success: true, 
+        token,
+        user: { username: ADMIN_USERNAME }
+      });
+    }
+
+    return res.status(401).json({ error: 'Invalid credentials' });
+  } catch (error) {
+    console.error('Login error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
