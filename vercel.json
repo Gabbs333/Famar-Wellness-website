@@ -2,9 +2,16 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 10
+    },
+    "api/test-diagnostic.js": {
+      "maxDuration": 10
     }
   },
   "rewrites": [
+    {
+      "source": "/api/test-diagnostic",
+      "destination": "/api/test-diagnostic.js"
+    },
     {
       "source": "/api/:path*",
       "destination": "/api/index.js"
