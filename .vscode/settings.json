@@ -1,5 +1,5 @@
 {
     "ai_assistant.agent.code_review.visible": true,
     "chat.todoListTool.enabled": true,
-    "kiroAgent.configureMCP": "Disabled"
+    "kiroAgent.configureMCP": "Enabled"
 }
