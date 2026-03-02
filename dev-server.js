@@ -209,7 +209,8 @@ app.post('/api/auth/login', async (req, res) => {
 
     // For now, use simple hardcoded credentials
     // In production, you should query the users table
-    if (username === ADMIN_USERNAME && password === 'admin') {
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       const token = generateToken();
       return res.status(200).json({ 
         success: true, 
