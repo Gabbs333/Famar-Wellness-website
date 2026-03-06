@@ -257,7 +257,7 @@ const MediaManager: React.FC<MediaManagerProps> = ({
             file_path: fileName,
             file_size: file.size,
             mime_type: file.type,
-            uploaded_by: 1, // TODO: Get actual user ID from auth
+            uploaded_by: null, // TODO: Get actual user ID from auth
           })
           .select()
           .single();
