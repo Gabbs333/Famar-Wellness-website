@@ -78,7 +78,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   'Famar Wellness - Massothérapie et Bien-être à Yaoundé',
   'Cabinet de massothérapie à Yaoundé. I-Motion, Andullation, Tecarthérapie. Sportifs et bien-être.'
 );
@@ -144,7 +144,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   'Nos Services - Famar Wellness',
   'Tous nos soins et traitements: massage sportif, analyse du dos, I-Motion, Andullation, Tecarthérapie à Yaoundé.'
 );
@@ -177,7 +177,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   'À propos - Famar Wellness',
   'Découvrez Famar Wellness, votre cabinet de massothérapie à Yaoundé. Expertise manuelle et technologies avancées.'
 );
@@ -213,7 +213,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   'Contact - Famar Wellness',
   'Contactez Famar Wellness à Yaoundé. Téléphone: +237 674 51 81 13. Email: contact@famarwellness.com'
 );
@@ -246,7 +246,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   'Réservation - Famar Wellness',
   'Réservez votre séance de massothérapie à Yaoundé. Massage sportif, I-Motion, Andullation, Tecarthérapie.'
 );
@@ -272,7 +272,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   'Technologies - Famar Wellness',
   'Découvrez nos technologies de pointe: I-Motion, Andullation, Tecarthérapie pour votre bien-être à Yaoundé.'
 );
@@ -311,7 +311,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   'Galerie - Famar Wellness',
   'Découvrez notre cabinet de massothérapie à Yaoundé en images.'
 );
@@ -338,7 +338,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   '',
   ''
 );
@@ -364,7 +364,7 @@ VALUES (
       }
     ]
   }'::jsonb,
-  true,
+  false,
   '',
   ''
 );
