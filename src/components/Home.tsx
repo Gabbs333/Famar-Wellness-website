@@ -1,12 +1,38 @@
+// Home.tsx - Home page with CMS content support
+import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, Star, Sparkles, Activity, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Hero from './Hero';
+import { useCmsPage, checkCmsPageExists } from '../lib/useCmsPage';
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  
+  // Check if CMS has content for this page
+  const [useCmsContent, setUseCmsContent] = useState(false);
+  const { page: cmsPage, loading: cmsLoading } = useCmsPage('accueil');
 
+  useEffect(() => {
+    async function checkCms() {
+      const exists = await checkCmsPageExists('accueil');
+      setUseCmsContent(exists);
+    }
+    checkCms();
+  }, []);
+
+  // If CMS has content, render DynamicHome
+  if (useCmsContent && cmsPage && !cmsLoading) {
+    return <DynamicHome cmsPage={cmsPage} />;
+  }
+
+  // Otherwise, render the default hardcoded content
+  return <DefaultHome y={y} scrollYProgress={scrollYProgress} />;
+}
+
+// Default hardcoded Home component
+function DefaultHome({ y, scrollYProgress }: { y: any; scrollYProgress: any }) {
   return (
     <>
       <Hero />
@@ -294,5 +320,195 @@ export default function Home() {
         </div>
       </section>
     </>
+  );
+}
+
+// Dynamic Home component - renders CMS content
+function DynamicHome({ cmsPage }: { cmsPage: any }) {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+
+  // Render sections from CMS content
+  const renderSections = () => {
+    if (!cmsPage.content?.sections) return null;
+
+    return cmsPage.content.sections.map((section: any, index: number) => {
+      switch (section.type) {
+        case 'hero':
+          return <CmsHero key={index} content={section.content} />;
+        case 'intro':
+          return <CmsIntro key={index} content={section.content} y={y} />;
+        case 'services':
+          return <CmsServices key={index} content={section.content} />;
+        case 'cta':
+          return <CmsCTA key={index} content={section.content} y={y} />;
+        default:
+          return null;
+      }
+    });
+  };
+
+  return (
+    <div className="dynamic-home">
+      {renderSections()}
+    </div>
+  );
+}
+
+// CMS Hero Section
+function CmsHero({ content }: { content: any }) {
+  return (
+    <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      {content.backgroundImage && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${content.backgroundImage})` }}
+        >
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
+      )}
+      <div className="relative z-10 text-center text-white px-4">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">{content.title}</h1>
+        {content.subtitle && (
+          <p className="text-xl md:text-2xl mb-8">{content.subtitle}</p>
+        )}
+        {content.ctaText && content.ctaLink && (
+          <Link 
+            to={content.ctaLink}
+            className="inline-block px-8 py-3 bg-teal-600 text-white font-bold rounded-full hover:bg-teal-700 transition-colors"
+          >
+            {content.ctaText}
+          </Link>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// CMS Intro Section
+function CmsIntro({ content, y }: { content: any; y: any }) {
+  return (
+    <section className="py-24 bg-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center gap-16">
+          <div className="w-full md:w-1/2">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight">
+              {content.title}
+            </h2>
+            <p className="text-gray-600 text-lg leading-relaxed mb-6">
+              {content.description}
+            </p>
+            {content.linkText && (
+              <Link 
+                to={content.link || '/a-propos'} 
+                className="group inline-flex items-center gap-3 px-6 py-3 bg-gray-50 text-teal-800 rounded-full hover:bg-teal-50 transition-colors duration-300 font-semibold"
+              >
+                {content.linkText}
+                <span className="bg-teal-600 text-white p-1 rounded-full group-hover:translate-x-1 transition-transform duration-300">
+                  <ArrowRight size={16} />
+                </span>
+              </Link>
+            )}
+          </div>
+          <div className="w-full md:w-1/2">
+            {content.image && (
+              <img 
+                src={content.image} 
+                alt={content.title} 
+                className="w-full rounded-[2rem] shadow-2xl"
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// CMS Services Section
+function CmsServices({ content }: { content: any }) {
+  const services = content.services || [];
+  
+  return (
+    <section className="py-24 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">{content.title}</h2>
+          {content.description && (
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">{content.description}</p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {services.map((service: any, idx: number) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.2, duration: 0.6 }}
+              whileHover={{ y: -10 }}
+              className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="h-64 overflow-hidden relative">
+                {service.image && (
+                  <>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10"></div>
+                    <img src={service.image} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                  </>
+                )}
+              </div>
+              <div className="p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">{service.title}</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">{service.description}</p>
+                <Link to="/services" className="inline-flex items-center text-teal-600 font-bold hover:text-teal-800 transition-colors">
+                  En savoir plus <ArrowRight size={18} className="ml-2 group-hover:translate-x-2 transition-transform" />
+                </Link>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// CMS CTA Section
+function CmsCTA({ content, y }: { content: any; y: any }) {
+  return (
+    <section className="py-32 bg-teal-900 relative overflow-hidden flex items-center justify-center">
+      <motion.div style={{ y }} className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+      </motion.div>
+
+      <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
+        <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+          {content.title}
+        </h2>
+        {content.description && (
+          <p className="text-teal-100 text-xl mb-12 max-w-3xl mx-auto leading-relaxed">
+            {content.description}
+          </p>
+        )}
+        <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          {content.primaryButtonText && content.primaryButtonLink && (
+            <Link
+              to={content.primaryButtonLink}
+              className="px-10 py-5 bg-lime-500 text-teal-900 font-bold text-lg rounded-full hover:bg-lime-400 transition-all shadow-xl shadow-lime-500/20 hover:scale-105"
+            >
+              {content.primaryButtonText}
+            </Link>
+          )}
+          {content.secondaryButtonText && content.secondaryButtonLink && (
+            <Link
+              to={content.secondaryButtonLink}
+              className="px-10 py-5 bg-transparent border-2 border-white text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all hover:scale-105"
+            >
+              {content.secondaryButtonText}
+            </Link>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
