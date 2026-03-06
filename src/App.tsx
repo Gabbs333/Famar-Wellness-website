@@ -19,12 +19,19 @@ import ScrollToTop from './components/ScrollToTop';
 
 // Admin Imports
 import { AuthProvider } from './admin/context/AuthContext';
+import { ThemeProvider } from './admin/context/ThemeContext';
 import Login from './admin/pages/Login';
 import AdminLayout from './admin/components/AdminLayout';
 import Dashboard from './admin/pages/Dashboard';
 import Contacts from './admin/pages/Contacts';
 import Bookings from './admin/pages/Bookings';
 import Posts from './admin/pages/Posts';
+import Media from './admin/pages/Media';
+import Pages from './admin/pages/Pages';
+import BlogCategories from './admin/pages/BlogCategories';
+import BlogTags from './admin/pages/BlogTags';
+import Analytics from './admin/pages/Analytics';
+import Settings from './admin/pages/Settings';
 
 // Public Layout Component
 const PublicLayout = () => (
@@ -116,32 +123,40 @@ const AboutPage = () => (
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="contacts" element={<Contacts />} />
-            <Route path="bookings" element={<Bookings />} />
-            <Route path="posts" element={<Posts />} />
-          </Route>
+      <ThemeProvider>
+        <Router>
+          <Routes>
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="pages" element={<Pages />} />
+              <Route path="posts" element={<Posts />} />
+              <Route path="posts/categories" element={<BlogCategories />} />
+              <Route path="posts/tags" element={<BlogTags />} />
+              <Route path="contacts" element={<Contacts />} />
+              <Route path="bookings" element={<Bookings />} />
+              <Route path="media" element={<Media />} />
+              <Route path="analytics" element={<Analytics />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
 
-          {/* Public Routes */}
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/technologies" element={<TechnologiesPage />} />
-            <Route path="/a-propos" element={<AboutPage />} />
-            <Route path="/galerie" element={<GalleryPage />} />
-            <Route path="/temoignages" element={<TestimonialsPage />} />
-            <Route path="/reservation" element={<BookingPage />} />
-            <Route path="/actualites" element={<BlogPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-          </Route>
-        </Routes>
-      </Router>
+            {/* Public Routes */}
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/technologies" element={<TechnologiesPage />} />
+              <Route path="/a-propos" element={<AboutPage />} />
+              <Route path="/galerie" element={<GalleryPage />} />
+              <Route path="/temoignages" element={<TestimonialsPage />} />
+              <Route path="/reservation" element={<BookingPage />} />
+              <Route path="/actualites" element={<BlogPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+            </Route>
+          </Routes>
+        </Router>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

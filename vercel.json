@@ -5,12 +5,19 @@
     },
     "api/test-diagnostic.js": {
       "maxDuration": 10
+    },
+    "api/optimize-image.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
     {
       "source": "/api/test-diagnostic",
       "destination": "/api/test-diagnostic.js"
+    },
+    {
+      "source": "/api/optimize-image",
+      "destination": "/api/optimize-image.js"
     },
     {
       "source": "/api/:path*",
