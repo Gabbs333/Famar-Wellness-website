@@ -20,6 +20,13 @@ import { getTemplateManager, TemplateChangeNotification } from './templates/Temp
 // Types
 interface PageEditorProps {
   initialContent?: string;
+  initialSlug?: string;
+  initialDescription?: string;
+  initialSeoTitle?: string;
+  initialSeoDescription?: string;
+  initialSeoKeywords?: string[];
+  initialFeaturedImage?: string;
+  initialStatus?: 'draft' | 'published' | 'archived';
   pageId?: string;
   pageTitle?: string;
   onSave?: (content: string, metadata: PageMetadata) => void;
@@ -50,6 +57,13 @@ interface ComponentData {
 
 const PageEditor: React.FC<PageEditorProps> = ({
   initialContent = '',
+  initialSlug = '',
+  initialDescription = '',
+  initialSeoTitle = '',
+  initialSeoDescription = '',
+  initialSeoKeywords = [],
+  initialFeaturedImage = '',
+  initialStatus = 'draft',
   pageId,
   pageTitle = 'Nouvelle page',
   onSave,
@@ -59,13 +73,13 @@ const PageEditor: React.FC<PageEditorProps> = ({
 }) => {
   // États
   const [title, setTitle] = useState(pageTitle);
-  const [slug, setSlug] = useState('');
-  const [excerpt, setExcerpt] = useState('');
-  const [seoTitle, setSeoTitle] = useState('');
-  const [seoDescription, setSeoDescription] = useState('');
-  const [seoKeywords, setSeoKeywords] = useState<string[]>([]);
-  const [featuredImage, setFeaturedImage] = useState('');
-  const [status, setStatus] = useState<'draft' | 'published' | 'archived'>('draft');
+  const [slug, setSlug] = useState(initialSlug);
+  const [excerpt, setExcerpt] = useState(initialDescription);
+  const [seoTitle, setSeoTitle] = useState(initialSeoTitle);
+  const [seoDescription, setSeoDescription] = useState(initialSeoDescription);
+  const [seoKeywords, setSeoKeywords] = useState<string[]>(initialSeoKeywords);
+  const [featuredImage, setFeaturedImage] = useState(initialFeaturedImage);
+  const [status, setStatus] = useState<'draft' | 'published' | 'archived'>(initialStatus);
   const [showPreview, setShowPreview] = useState(false);
   const [showComponentLibrary, setShowComponentLibrary] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');

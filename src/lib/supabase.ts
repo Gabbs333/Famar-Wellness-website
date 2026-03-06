@@ -57,3 +57,31 @@ export interface Post {
   created_at: string;
   updated_at: string;
 }
+
+export interface CmsPage {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  content: string | Record<string, any> | null; // HTML ou JSON
+  meta_title: string | null;
+  meta_description: string | null;
+  meta_keywords: string[] | null;
+  featured_image: string | null;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CmsMedia {
+  id: string;
+  filename: string;
+  file_path: string;
+  file_type: string;
+  file_size: number;
+  alt_text: string | null;
+  caption: string | null;
+  width: number | null;
+  height: number | null;
+  created_at: string;
+}
