@@ -1,8 +1,51 @@
-import { motion } from 'motion/react';
+import { useEffect } from 'react';
+import { motion, useAnimation } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Hero() {
+  const blob1Controls = useAnimation();
+  const blob2Controls = useAnimation();
+  
+  useEffect(() => {
+    const animateBlobs = async () => {
+      await Promise.all([
+        blob1Controls.start({
+          scale: [1, 1.15, 1],
+          opacity: [0.3, 0.45, 0.3],
+        }),
+        blob2Controls.start({
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.35, 0.2],
+        })
+      ]);
+    };
+    
+    // Start continuous animation loop
+    let cancelled = false;
+    const loop = async () => {
+      while (!cancelled) {
+        await Promise.all([
+          blob1Controls.start({
+            scale: [1, 1.15, 1],
+            opacity: [0.3, 0.45, 0.3],
+            transition: { duration: 8, ease: "easeInOut" }
+          }),
+          blob2Controls.start({
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.35, 0.2],
+            transition: { duration: 10, ease: "easeInOut", delay: 1 }
+          })
+        ]);
+      }
+    };
+    
+    loop();
+    
+    return () => {
+      cancelled = true;
+    };
+  }, [blob1Controls, blob2Controls]);
   return (
     <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -15,22 +58,18 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-teal-900/80 to-black/40 mix-blend-multiply" />
       </div>
 
-      {/* Animated Background Blobs */}
+      {/* Animated Background Blobs - Optimized with CSS */}
       <motion.div 
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
+        animate={blob1Controls}
+        useWillChange={true}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500 rounded-full blur-[120px] mix-blend-screen z-0"
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500 rounded-full blur-[60px] mix-blend-screen z-0 will-change-transform"
       />
       <motion.div 
-        animate={{ 
-          scale: [1, 1.3, 1],
-          opacity: [0.2, 0.4, 0.2],
-        }}
+        animate={blob2Controls}
+        useWillChange={true}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-lime-500 rounded-full blur-[100px] mix-blend-screen z-0"
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-lime-500 rounded-full blur-[50px] mix-blend-screen z-0 will-change-transform"
       />
 
       {/* Content */}
