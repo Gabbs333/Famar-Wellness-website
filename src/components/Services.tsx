@@ -63,7 +63,7 @@ const services = [
     ],
     icon: IconEMS,
     color: "text-blue-600 bg-blue-50",
-    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015741997_WhatsApp%20Image%202026-02-17%20at%2019.43.39%20(1)%20(1).jpeg"
   },
   {
     title: "Thérapie par Andullation",
@@ -77,7 +77,7 @@ const services = [
     ],
     icon: IconAndullation,
     color: "text-purple-600 bg-purple-50",
-    image: "https://images.unsplash.com/photo-1519824145371-296894a0daa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1772773238178_WhatsApp%20Image%202026-02-17%20at%2019.44.23.jpeg"
   },
   {
     title: "Tecarthérapie (Winback)",
@@ -91,12 +91,12 @@ const services = [
     ],
     icon: IconTecar,
     color: "text-orange-600 bg-orange-50",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016105237_WhatsApp%20Image%202026-03-05%20at%2012.06.46.jpeg"
   },
   {
     title: "Lipo-Laser & Andullation",
     subtitle: "La solution minceur ciblée sans chirurgie",
-    description: "Vous n'arrivez pas à perdre ce petit ventre ou cette culotte de cheval malgré le sport ? Le Lipo-Laser cible directement les cellules graisseuses pour les vider, sans aucune douleur ni aiguille.",
+    description: "Cette thérapie scientifiquement reconnue est une méthode qui se base sur la technologie lumineuse pour traiter les cellules adipeuses de manière ciblée et délivrer des résultats immédiats.",
     benefits: [
       "Perte de centimètres visible dès les premières séances.",
       "Cible les zones rebelles (ventre, cuisses, bras) impossibles à perdre autrement.",
@@ -105,10 +105,10 @@ const services = [
     ],
     icon: IconLipo,
     color: "text-pink-600 bg-pink-50",
-    image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016052577_WhatsApp%20Image%202026-03-05%20at%2011.51.13%20(1).jpeg"
   },
   {
-    title: "Scanner IDIAG M360",
+    title: "Scanner pour analyse du dos",
     subtitle: "Le check-up complet de votre dos",
     description: "Avant de traiter, il faut comprendre. Ce scanner révolutionnaire analyse votre colonne vertébrale en mouvement, sans radiation (contrairement aux radios classiques).",
     benefits: [
@@ -119,7 +119,7 @@ const services = [
     ],
     icon: IconScanner,
     color: "text-teal-600 bg-teal-50",
-    image: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+    image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1772774138164_WhatsApp%20Image%202026-02-17%20at%2019.49.38.jpeg"
   },
   {
     title: "Massothérapie Sportive",
