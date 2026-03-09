@@ -135,6 +135,20 @@ const services = [
     color: "text-lime-600 bg-lime-50",
     image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
   },
+  {
+    title: "Massage Relaxant",
+    subtitle: "Détente profonde pour libérer votre stress",
+    description: "Offrez-vous un moment de évasion totale. Ce massage doux et enveloppant apaise le corps et l'esprit, idéal pour retrouver calme et sérénité après une journée stressante.",
+    benefits: [
+      "Stress et anxiété ? Laissez-vous porter par des mouvements fluides et relaxants.",
+      "Sommeil perturbé ? Ce massage favorise un sommeil réparateur et profond.",
+      "Tensions quotidiennes ? Libérez les nœuds de stress accumulés dans les épaules et le cou.",
+      " Besoin de pause ? Un moment rien que pour vous, loin du quotidien."
+    ],
+    icon: IconMassage,
+    color: "text-teal-600 bg-teal-50",
+    image: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+  },
 ];
 
 const massages = [
