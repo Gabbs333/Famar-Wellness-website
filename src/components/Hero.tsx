@@ -48,13 +48,22 @@ export default function Hero() {
   }, [blob1Controls, blob2Controls]);
   return (
     <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-          alt="Massage Therapy Spa"
-          className="w-full h-full object-cover"
-        />
+      {/* Background Image with Overlay - Two images side by side */}
+      <div className="absolute inset-0 z-0 flex">
+        <div className="w-1/2 h-full">
+          <img
+            src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016052577_WhatsApp%20Image%202026-03-05%20at%2011.51.13%20(1).jpeg"
+            alt="Famar Wellness Treatment"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="w-1/2 h-full">
+          <img
+            src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015799505_WhatsApp%20Image%202026-02-17%20at%2019.49.38%20(1).jpeg"
+            alt="Famar Wellness Care"
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-teal-900/80 to-black/40 mix-blend-multiply" />
       </div>
 

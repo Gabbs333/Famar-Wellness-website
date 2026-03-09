@@ -119,7 +119,7 @@ function DefaultHome({ y, scrollYProgress }: { y: any; scrollYProgress: any }) {
                 className="relative rounded-[2rem] overflow-hidden shadow-2xl z-10"
               >
                 <img 
-                  src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015995493_WhatsApp%20Image%202026-02-19%20at%2018.42.26%20(1).jpeg" 
                   alt="Cabinet Famar Wellness" 
                   className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
                 />
@@ -203,23 +203,23 @@ function DefaultHome({ y, scrollYProgress }: { y: any; scrollYProgress: any }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
               {
-                title: "Electrostimulation",
-                desc: "20 minutes = 4h de sport. Renforcement musculaire et perte de poids rapide.",
-                image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Scanner pour analyse de dos",
+                desc: "Analyse précise de votre colonne vertébrale pour un diagnostic personnalisé.",
+                image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015799505_WhatsApp%20Image%202026-02-17%20at%2019.49.38%20(1).jpeg",
                 icon: <Zap className="text-white" size={24} />,
                 color: "bg-blue-500"
               },
               {
-                title: "Thérapie par Andullation",
-                desc: "Soulagement immédiat des douleurs dorsales et relaxation profonde.",
-                image: "https://images.unsplash.com/photo-1519824145371-296894a0daa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Liposucion par lipolaser",
+                desc: "Élimination non invasive des graisses par technologie laser avancée.",
+                image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016052577_WhatsApp%20Image%202026-03-05%20at%2011.51.13%20(1).jpeg",
                 icon: <Activity className="text-white" size={24} />,
                 color: "bg-purple-500"
               },
               {
-                title: "Massages Sportifs",
-                desc: "Récupération musculaire et prévention des blessures pour les athlètes.",
-                image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Tecatherapie",
+                desc: "Traitement thermique profond pour soulager douleurs et tensions.",
+                image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016105237_WhatsApp%20Image%202026-03-05%20at%2012.06.46.jpeg",
                 icon: <Sparkles className="text-white" size={24} />,
                 color: "bg-teal-500"
               }
