@@ -41,7 +41,7 @@ export default function Technologies() {
             </motion.div>
             <div className="w-full md:w-1/2">
               <img 
-                src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015734772_WhatsApp%20Image%202026-02-17%20at%2019.43.36%20(1).jpeg" 
                 alt="Electrostimulation" 
                 className="rounded-3xl shadow-lg object-cover h-full min-h-[400px]"
               />
@@ -73,7 +73,7 @@ export default function Technologies() {
             </motion.div>
             <div className="w-full md:w-1/2">
               <img 
-                src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016052577_WhatsApp%20Image%202026-03-05%20at%2011.51.13%20(1).jpeg" 
                 alt="Lipo Laser" 
                 className="rounded-3xl shadow-lg object-cover h-full min-h-[400px]"
               />
@@ -95,7 +95,7 @@ export default function Technologies() {
                 <Waves className="text-purple-600 mb-6" size={48} />
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">ANDUSLIM : Façonnage et relaxation</h3>
                 <p className="text-gray-600 mb-6">
-                  ANDUSLIM est une ceinture innovante de thérapie vibratoire qui soutient votre corps grâce à la technologie Andullation. Elle favorise le réchauffement et la relaxation des muscles grâce à sa fonction de chaleur profonde.
+                  ANDUSLIM est une ceinture innovante de thérapie vibratoire qui soutient votre corps grâce à la technologie Andullation. Elle favorise le réchauffement et la relaxation des muscles grâce à sa fonction de chaleur profonde. Elle offre un effet ciblé avec 3 programmes différents et une experience d'utilisation confortable et efficace.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="bg-white p-4 rounded-xl shadow-sm">
@@ -119,7 +119,7 @@ export default function Technologies() {
             </motion.div>
             <div className="w-full md:w-1/2">
               <img 
-                src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016075374_WhatsApp%20Image%202026-03-05%20at%2011.56.51%20(1).jpeg" 
                 alt="Relaxation Therapy" 
                 className="rounded-3xl shadow-lg object-cover h-full min-h-[400px]"
               />
