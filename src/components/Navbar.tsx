@@ -31,7 +31,6 @@ export default function Navbar() {
     { name: 'À Propos', path: '/a-propos' },
     { name: 'Galerie', path: '/galerie' },
     { name: 'Témoignages', path: '/temoignages' },
-    { name: 'Actualités', path: '/actualites' },
     { name: 'Contact', path: '/contact' },
   ];
 

@@ -12,8 +12,10 @@ import About from './components/About';
 import Gallery from './components/Gallery';
 import Testimonials from './components/Testimonials';
 import Booking from './components/Booking';
-import Blog from './components/Blog';
 import Contact from './components/Contact';
+import LegalNotice from './components/LegalNotice';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import Sitemap from './components/Sitemap';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -94,15 +96,6 @@ const BookingPage = () => (
   </>
 );
 
-const BlogPage = () => (
-  <>
-    <div className="pt-20">
-      <Blog />
-    </div>
-    <Contact />
-  </>
-);
-
 const ContactPage = () => (
   <>
     <div className="pt-20">
@@ -117,6 +110,30 @@ const AboutPage = () => (
       <About />
     </div>
     <Contact />
+  </>
+);
+
+const LegalNoticePage = () => (
+  <>
+    <div className="pt-20">
+      <LegalNotice />
+    </div>
+  </>
+);
+
+const PrivacyPolicyPage = () => (
+  <>
+    <div className="pt-20">
+      <PrivacyPolicy />
+    </div>
+  </>
+);
+
+const SitemapPage = () => (
+  <>
+    <div className="pt-20">
+      <Sitemap />
+    </div>
   </>
 );
 
@@ -151,8 +168,10 @@ export default function App() {
               <Route path="/galerie" element={<GalleryPage />} />
               <Route path="/temoignages" element={<TestimonialsPage />} />
               <Route path="/reservation" element={<BookingPage />} />
-              <Route path="/actualites" element={<BlogPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/mentions-legales" element={<LegalNoticePage />} />
+              <Route path="/politique-confidentialite" element={<PrivacyPolicyPage />} />
+              <Route path="/plan-site" element={<SitemapPage />} />
             </Route>
           </Routes>
         </Router>
