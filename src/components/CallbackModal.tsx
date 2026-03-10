@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { X, PhoneCall } from 'lucide-react';
+import { X, PhoneCall, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface CallbackModalProps {
@@ -9,17 +9,49 @@ interface CallbackModalProps {
 
 export default function CallbackModal({ isOpen, onClose }: CallbackModalProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: ''
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
-    setTimeout(() => {
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        onClose();
-      }, 3000);
-    }, 1000);
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          subject: 'Demande de rappel téléphonique',
+          message: 'Demande de rappel téléphonique gratuite',
+          type: 'callback'
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: '', phone: '' });
+        setTimeout(() => {
+          setSubmitted(false);
+          onClose();
+        }, 3000);
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Erreur lors de l\'envoi de la demande');
+      }
+    } catch (err) {
+      setError('Erreur de connexion. Veuillez réessayer.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,11 +110,19 @@ export default function CallbackModal({ isOpen, onClose }: CallbackModalProps) {
                       Laissez-nous vos coordonnées, nous vous rappellerons pour répondre à vos questions ou fixer un rendez-vous.
                     </p>
                     
+                    {error && (
+                      <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
+                        {error}
+                      </div>
+                    )}
+                    
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
                       <input
                         type="text"
                         required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all"
                         placeholder="Votre nom"
                       />
@@ -93,6 +133,8 @@ export default function CallbackModal({ isOpen, onClose }: CallbackModalProps) {
                       <input
                         type="tel"
                         required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all"
                         placeholder="Votre numéro de téléphone"
                       />
@@ -100,9 +142,17 @@ export default function CallbackModal({ isOpen, onClose }: CallbackModalProps) {
 
                     <button
                       type="submit"
-                      className="w-full py-3 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 mt-2"
+                      disabled={loading}
+                      className="w-full py-3 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 mt-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Être rappelé
+                      {loading ? (
+                        <>
+                          <Loader2 size={20} className="animate-spin" />
+                          Envoi en cours...
+                        </>
+                      ) : (
+                        'Être rappelé'
+                      )}
                     </button>
                   </form>
                 )}
