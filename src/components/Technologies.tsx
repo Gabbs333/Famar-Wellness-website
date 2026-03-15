@@ -41,7 +41,7 @@ export default function Technologies() {
             </motion.div>
             <div className="w-full md:w-1/2">
               <img 
-                src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015734772_WhatsApp%20Image%202026-02-17%20at%2019.43.36%20(1).jpeg" 
+                src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773536285529_combi-Imotion-1024x859.png" 
                 alt="Electrostimulation" 
                 className="rounded-3xl shadow-lg object-cover h-full min-h-[400px]"
               />
@@ -129,7 +129,7 @@ export default function Technologies() {
             </motion.div>
             <div className="w-full md:w-1/2">
               <img 
-                src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1772774138164_WhatsApp%20Image%202026-02-17%20at%2019.49.38.jpeg" 
+                src="https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015773718_WhatsApp%20Image%202026-02-17%20at%2019.49.28%20(1).jpeg" 
                 alt="Scanner analyse du dos" 
                 className="rounded-3xl shadow-lg object-cover h-full min-h-[400px]"
               />
@@ -149,7 +149,7 @@ export default function Technologies() {
               <div className="bg-pink-50 rounded-3xl p-8 border border-pink-100 relative overflow-hidden">
                 <div className="absolute top-0 left-0 -mt-10 -ml-10 w-40 h-40 bg-pink-200 rounded-full opacity-20 blur-3xl"></div>
                 <Activity className="text-pink-600 mb-6" size={48} />
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Liposuccion sans chirurgie</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Lipo-Laser (Liposuccion sans chirurgie)</h3>
                 <p className="text-gray-600 mb-4">
                   Cette thérapie scientifiquement reconnue (Low Level Laser Therapy) se base sur la technologie lumineuse pour traiter les cellules adipeuses de manière ciblée et délivrer des résultats immédiats.
                 </p>
@@ -169,7 +169,7 @@ export default function Technologies() {
           </div>
         </div>
 
-        {/* Section 5: Andullation Matelas */}
+        {/* Section 5: Andullation */}
         <div className="mb-24">
           <div className="flex flex-col md:flex-row items-center gap-12">
             <motion.div 
@@ -183,7 +183,7 @@ export default function Technologies() {
                 <Waves className="text-purple-600 mb-6" size={48} />
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">Andullation par Matelas</h3>
                 <p className="text-gray-600 mb-4">
-                  Le matelas d'Andullation est une technologie unique qui combine des vibrations mécaniques et de la chaleur infrarouge pour une relaxation profonde et un soulagement des douleurs chroniques.
+                  L'Andullation est une technologie unique qui combine des vibrations mécaniques et de la chaleur infrarouge pour une relaxation profonde et un soulagement des douleurs chroniques.
                 </p>
                 <h4 className="font-semibold text-gray-900 mt-6 mb-2">Indications et Bienfaits</h4>
                 <ul className="space-y-3">
