@@ -91,7 +91,7 @@ function DefaultHome({ y, scrollYProgress }: { y: any; scrollYProgress: any }) {
                 </h2>
                 
                 <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                  Situé au cœur de Bastos à Yaoundé, notre cabinet réinvente la massothérapie en combinant l'expertise manuelle aux technologies les plus avancées (Lipolaser, scanner et annalyse de dos, Andullation, Tecarthérapie, I-Motion).
+                  Situé au cœur de Bastos à Yaoundé, notre cabinet réinvente la massothérapie en combinant l'expertise manuelle aux technologies les plus avancées (Lipo-laser, scanner et annalyse de dos, Anduslim, Andullation, Tecarthérapie, I-Motion).
                 </p>
                 
                 <p className="text-gray-600 leading-relaxed mb-10">
@@ -210,7 +210,7 @@ function DefaultHome({ y, scrollYProgress }: { y: any; scrollYProgress: any }) {
                 color: "bg-blue-500"
               },
               {
-                title: "lipolaser = Liposucion sans chirurgie",
+                title: "Lipo-laser = Liposucion sans chirurgie",
                 desc: "Élimination non invasive des graisses par technologie laser avancée.",
                 image: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016052577_WhatsApp%20Image%202026-03-05%20at%2011.51.13%20(1).jpeg",
                 icon: <Activity className="text-white" size={24} />,

@@ -181,7 +181,7 @@ export default function Technologies() {
               <div className="bg-purple-50 rounded-3xl p-8 border border-purple-100 relative overflow-hidden">
                 <div className="absolute bottom-0 right-0 -mb-10 -mr-10 w-40 h-40 bg-purple-200 rounded-full opacity-20 blur-3xl"></div>
                 <Waves className="text-purple-600 mb-6" size={48} />
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Andullation par Matelas</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Andullation</h3>
                 <p className="text-gray-600 mb-4">
                   L'Andullation est une technologie unique qui combine des vibrations mécaniques et de la chaleur infrarouge pour une relaxation profonde et un soulagement des douleurs chroniques.
                 </p>
