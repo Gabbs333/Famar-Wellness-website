@@ -333,6 +333,7 @@ export default function Pricing() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg={section.items.length > 2 ? 3 : 2} gap-6">
               {section.items.map((item, itemIndex) => {
                 const colors = colorMap[item.color] || colorMap.teal;
+                const isPopular = item.popular;
                 return (
                   <motion.div
                     key={itemIndex}
@@ -340,7 +341,7 @@ export default function Pricing() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: itemIndex * 0.1 }}
-                    className={`relative ${colors.bg} rounded-2xl border ${colors.border} shadow-sm hover:shadow-2xl transition-all duration-300 ${item.popular ? 'ring-2 ring-offset-2 ' + colors.badge : ''}`}
+                    className={`relative ${isPopular ? colors.badge : colors.bg} rounded-2xl border ${isPopular ? 'border-' + item.color + '-400' : colors.border} shadow-sm hover:shadow-2xl transition-all duration-300 ${isPopular ? 'ring-2 ring-offset-2 ' + colors.badge : ''}`}
                   >
                     {item.popular && (
                       <div className={`absolute -top-3 left-1/2 -translate-x-1/2 ${colors.badge} text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md z-10`}>
@@ -349,19 +350,19 @@ export default function Pricing() {
                     )}
                     
                     <div className="p-6">
-                      <h3 className="font-bold text-gray-900 text-xl mb-2">{item.name}</h3>
-                      <p className="text-gray-600 text-sm mb-4 leading-relaxed">{item.description}</p>
+                      <h3 className={`font-bold text-xl mb-2 ${isPopular ? 'text-white' : 'text-gray-900'}`}>{item.name}</h3>
+                      <p className={`text-sm mb-4 leading-relaxed ${isPopular ? 'text-white/90' : 'text-gray-600'}`}>{item.description}</p>
                       
                       <div className="mb-6">
-                        <span className="text-4xl font-extrabold text-gray-900">{item.price}</span>
-                        <span className="text-gray-500 text-lg ml-1">Fcfa</span>
+                        <span className={`text-4xl font-extrabold ${isPopular ? 'text-white' : 'text-gray-900'}`}>{item.price}</span>
+                        <span className={`text-lg ml-1 ${isPopular ? 'text-white/80' : 'text-gray-500'}`}>Fcfa</span>
                       </div>
 
                       {item.features.length > 0 && (
                         <ul className="space-y-2 mb-6">
                           {item.features.map((feature, i) => (
-                            <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
-                              <svg className={`w-4 h-4 ${colors.text} flex-shrink-0`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <li key={i} className={`flex items-center gap-2 text-sm ${isPopular ? 'text-white/90' : 'text-gray-700'}`}>
+                              <svg className={`w-4 h-4 ${isPopular ? 'text-white' : colors.text} flex-shrink-0`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </svg>
                               {feature}
@@ -372,7 +373,7 @@ export default function Pricing() {
 
                       <a
                         href="/reservation"
-                        className={`block w-full ${colors.btn} text-white text-center py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-lg`}
+                        className={`block w-full ${isPopular ? 'bg-white text-' + item.color + '-600 hover:bg-gray-100' : colors.btn + ' text-white'} text-center py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-lg`}
                       >
                         Réserver
                       </a>
