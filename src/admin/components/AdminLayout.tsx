@@ -89,7 +89,7 @@ const AdminLayout = () => {
       {/* Sidebar */}
       <aside 
         className={`
-          fixed lg:static inset-y-0 left-0 z-50
+          fixed lg:static inset-y-0 left-0 z-50 h-screen
           w-64 bg-white dark:bg-gray-800 shadow-lg
           transform transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -113,9 +113,9 @@ const AdminLayout = () => {
           </p>
         </div>
 
-        {/* Navigation */}
-        <nav className="mt-4 px-2 flex-1 overflow-y-auto">
-          <ul className="space-y-1 pb-20">
+        {/* Navigation - Scrollable */}
+        <nav className="mt-4 px-2 h-[calc(100vh-180px)] overflow-y-auto">
+          <ul className="space-y-1">
             {navItems.map((item) => (
               <li key={item.path}>
                 <Link
