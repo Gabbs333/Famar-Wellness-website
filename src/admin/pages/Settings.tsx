@@ -48,7 +48,7 @@ const Settings: React.FC = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsSaving(false);
-    alert('Settings saved successfully!');
+    alert('Paramètres enregistrés avec succès !');
   };
 
   const handleChange = (key: keyof SiteSettings, value: any) => {
@@ -60,10 +60,10 @@ const Settings: React.FC = () => {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-          Settings
+          Paramètres
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Configure your CMS preferences and site settings
+          Configurez les préférences de votre CMS et les paramètres du site
         </p>
       </div>
 
@@ -72,13 +72,13 @@ const Settings: React.FC = () => {
         <div className="flex items-center mb-4">
           <Palette className="w-5 h-5 text-teal-600 dark:text-teal-400 mr-2" />
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-            Appearance
+            Apparence
           </h3>
         </div>
         
         <div className="space-y-4">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Theme
+            Thème
           </label>
           <div className="flex space-x-4">
             <button
@@ -90,7 +90,7 @@ const Settings: React.FC = () => {
               }`}
             >
               <Sun className="w-6 h-6 mr-2 text-amber-500" />
-              <span className="font-medium">Light</span>
+              <span className="font-medium">Clair</span>
             </button>
             <button
               onClick={() => setTheme('dark')}
@@ -101,7 +101,7 @@ const Settings: React.FC = () => {
               }`}
             >
               <Moon className="w-6 h-6 mr-2 text-indigo-500" />
-              <span className="font-medium">Dark</span>
+              <span className="font-medium">Sombre</span>
             </button>
           </div>
         </div>
@@ -112,14 +112,14 @@ const Settings: React.FC = () => {
         <div className="flex items-center mb-4">
           <Globe className="w-5 h-5 text-teal-600 dark:text-teal-400 mr-2" />
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-            General Settings
+            Paramètres généraux
           </h3>
         </div>
         
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Site Name
+              Nom du site
             </label>
             <input
               type="text"
@@ -131,7 +131,7 @@ const Settings: React.FC = () => {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Site Description
+              Description du site
             </label>
             <textarea
               value={settings.siteDescription}
@@ -173,16 +173,16 @@ const Settings: React.FC = () => {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Language
+              Langue
             </label>
             <select
               value={settings.language}
               onChange={(e) => handleChange('language', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
-              <option value="fr">French</option>
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
+              <option value="fr">Français</option>
+              <option value="en">Anglais</option>
+              <option value="es">Espagnol</option>
             </select>
           </div>
         </div>
@@ -199,7 +199,7 @@ const Settings: React.FC = () => {
         
         <div className="space-y-4">
           <label className="flex items-center justify-between cursor-pointer">
-            <span className="text-gray-700 dark:text-gray-300">Email Notifications</span>
+            <span className="text-gray-700 dark:text-gray-300">Notifications par email</span>
             <input
               type="checkbox"
               checked={settings.emailNotifications}
@@ -209,7 +209,7 @@ const Settings: React.FC = () => {
           </label>
           
           <label className="flex items-center justify-between cursor-pointer">
-            <span className="text-gray-700 dark:text-gray-300">Push Notifications</span>
+            <span className="text-gray-700 dark:text-gray-300">Notifications push</span>
             <input
               type="checkbox"
               checked={settings.pushNotifications}
@@ -225,13 +225,13 @@ const Settings: React.FC = () => {
         <div className="flex items-center mb-4">
           <SettingsIcon className="w-5 h-5 text-teal-600 dark:text-teal-400 mr-2" />
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-            Editor Settings
+            Paramètres de l'éditeur
           </h3>
         </div>
         
         <div className="space-y-4">
           <label className="flex items-center justify-between cursor-pointer">
-            <span className="text-gray-700 dark:text-gray-300">Auto-save</span>
+            <span className="text-gray-700 dark:text-gray-300">Sauvegarde automatique</span>
             <input
               type="checkbox"
               checked={settings.autoSave}
@@ -243,7 +243,7 @@ const Settings: React.FC = () => {
           {settings.autoSave && (
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Auto-save Interval (seconds)
+                Intervalle de sauvegarde automatique (secondes)
               </label>
               <input
                 type="number"
@@ -266,7 +266,7 @@ const Settings: React.FC = () => {
           className="flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50"
         >
           <Save className="w-5 h-5 mr-2" />
-          {isSaving ? 'Saving...' : 'Save Settings'}
+          {isSaving ? 'Enregistrement...' : 'Enregistrer les paramètres'}
         </button>
       </div>
     </div>

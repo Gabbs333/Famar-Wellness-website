@@ -30,16 +30,16 @@ const Bookings = () => {
           'Authorization': `Bearer ${token}`,
         },
       });
-      console.log('Bookings response status:', response.status);
+      console.log('Statut de la réponse des réservations:', response.status);
       if (response.ok) {
         const data = await response.json();
-        console.log('Bookings data:', data);
+        console.log('Données des réservations:', data);
         setBookings(data);
       } else if (response.status === 401) {
-        logout(); // Token expired or invalid
+        logout(); // Jeton expiré ou invalide
       }
     } catch (error) {
-      console.error('Failed to fetch bookings', error);
+      console.error('Échec de la récupération des réservations', error);
     } finally {
       setLoading(false);
     }
@@ -59,18 +59,18 @@ const Bookings = () => {
         setBookings(bookings.map(b => b.id === id ? { ...b, status: newStatus } : b));
       }
     } catch (error) {
-      console.error('Failed to update booking status', error);
+      console.error('Échec de la mise à jour du statut de la réservation', error);
     }
   };
 
-  if (loading) return <div className="text-center p-8">Loading...</div>;
+  if (loading) return <div className="text-center p-8">Chargement...</div>;
 
   if (bookings.length === 0) {
     return (
       <div>
-        <h2 className="text-2xl font-bold mb-6">Bookings</h2>
+        <h2 className="text-2xl font-bold mb-6">Réservations</h2>
         <div className="bg-white shadow-md rounded-lg p-6 text-center text-gray-500">
-          No bookings found.
+          Aucune réservation trouvée.
         </div>
       </div>
     );
@@ -86,16 +86,16 @@ const Bookings = () => {
 
   return (
     <div className="overflow-x-auto">
-      <h2 className="text-2xl font-bold mb-6">Bookings</h2>
+      <h2 className="text-2xl font-bold mb-6">Réservations</h2>
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Heure</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -122,7 +122,7 @@ const Bookings = () => {
                       booking.status === 'cancelled' ? 'bg-red-100 text-red-800' : 
                       'bg-yellow-100 text-yellow-800'
                     }`}>
-                      {booking.status}
+                      {booking.status === 'confirmed' ? 'Confirmé' : booking.status === 'cancelled' ? 'Annulé' : 'En attente'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -131,7 +131,7 @@ const Bookings = () => {
                         onClick={() => handleStatusUpdate(booking.id, 'confirmed')}
                         className="text-green-600 hover:text-green-900 mr-4"
                       >
-                        Confirm
+                        Confirmer
                       </button>
                     )}
                     {booking.status !== 'cancelled' && (
@@ -139,7 +139,7 @@ const Bookings = () => {
                         onClick={() => handleStatusUpdate(booking.id, 'cancelled')}
                         className="text-red-600 hover:text-red-900"
                       >
-                        Cancel
+                        Annuler
                       </button>
                     )}
                   </td>

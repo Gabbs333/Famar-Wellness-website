@@ -63,15 +63,15 @@ const AdminLayout = () => {
   };
 
   const navItems = [
-    { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' },
     { path: '/admin/pages', icon: File, label: 'Pages' },
-    { path: '/admin/posts', icon: FileText, label: 'Blog Posts' },
-    { path: '/admin/posts/categories', icon: Layers, label: 'Categories' },
+    { path: '/admin/posts', icon: FileText, label: 'Articles Blog' },
+    { path: '/admin/posts/categories', icon: Layers, label: 'Catégories' },
     { path: '/admin/posts/tags', icon: Tags, label: 'Tags' },
-    { path: '/admin/media', icon: ImageIcon, label: 'Media' },
+    { path: '/admin/media', icon: ImageIcon, label: 'Médias' },
     { path: '/admin/contacts', icon: Users, label: 'Contacts' },
-    { path: '/admin/bookings', icon: Calendar, label: 'Bookings' },
-    { path: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
+    { path: '/admin/bookings', icon: Calendar, label: 'Réservations' },
+    { path: '/admin/analytics', icon: BarChart3, label: 'Analytiques' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -114,8 +114,8 @@ const AdminLayout = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-4 px-2 overflow-y-auto h-[calc(100vh-140px)]">
-          <ul className="space-y-1">
+        <nav className="mt-4 px-2 flex-1 overflow-y-auto">
+          <ul className="space-y-1 pb-20">
             {navItems.map((item) => (
               <li key={item.path}>
                 <Link
@@ -143,14 +143,14 @@ const AdminLayout = () => {
             className="flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors mb-2"
           >
             <Settings className="w-5 h-5 mr-3" />
-            Settings
+            Paramètres
           </Link>
           <button
             onClick={handleLogout}
             className="flex items-center w-full px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Logout
+            Déconnexion
           </button>
         </div>
       </aside>
@@ -181,7 +181,7 @@ const AdminLayout = () => {
                 className="flex items-center px-3 py-2 text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
               >
                 <Search className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Search</span>
+                <span className="hidden sm:inline">Rechercher</span>
                 <kbd className="hidden sm:inline ml-3 px-1.5 py-0.5 text-xs bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded">
                   {navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}K
                 </kbd>

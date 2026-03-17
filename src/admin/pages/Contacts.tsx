@@ -33,10 +33,10 @@ const Contacts = () => {
         const data = await response.json();
         setContacts(data);
       } else if (response.status === 401) {
-        logout(); // Token expired
+        logout(); // Jeton expiré
       }
     } catch (error) {
-      console.error('Failed to fetch contacts', error);
+      console.error('Échec de la récupération des contacts', error);
     } finally {
       setLoading(false);
     }
@@ -56,11 +56,11 @@ const Contacts = () => {
         setContacts(contacts.map(c => c.id === id ? { ...c, status: newStatus } : c));
       }
     } catch (error) {
-      console.error('Failed to update contact status', error);
+      console.error('Échec de la mise à jour du statut du contact', error);
     }
   };
 
-  if (loading) return <div className="text-center p-8">Loading...</div>;
+  if (loading) return <div className="text-center p-8">Chargement...</div>;
 
   return (
     <div className="overflow-x-auto">
@@ -71,10 +71,10 @@ const Contacts = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Info</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coordonnées</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sujet</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -99,7 +99,7 @@ const Contacts = () => {
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       contact.status === 'new' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                     }`}>
-                      {contact.status}
+                      {contact.status === 'new' ? 'Nouveau' : 'Lu'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -108,7 +108,7 @@ const Contacts = () => {
                         onClick={() => handleStatusUpdate(contact.id, 'read')}
                         className="text-teal-600 hover:text-teal-900 mr-4"
                       >
-                        Mark as Read
+                        Marquer comme lu
                       </button>
                     )}
                   </td>
